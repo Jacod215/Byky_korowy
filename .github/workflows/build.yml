@@ -1,4 +1,4 @@
-name: Build C# Project
+name: Build C# Application
 
 on:
   push:
@@ -16,23 +16,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'  # Укажите версию .NET, соответствующую вашему проекту
 
       - name: Restore dependencies
-        run: nuget restore byky_korowa.sln
+        run: dotnet restore byky_korowa/byky_korowa.csproj
 
-      - name: Build project
-        run: msbuild byky_korowa/byky_korowa.csproj /p:Configuration=Release /p:Platform="Any CPU"
+      - name: Build application
+        run: dotnet build byky_korowa/byky_korowa.csproj --configuration Release /p:OutputPath=./build
 
-      - name: Publish project
-        run: msbuild byky_korowa/byky_korowa.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=output
+      - name: Publish application
+        run: dotnet publish byky_korowa/byky_korowa.csproj --configuration Release --self-contained true --runtime win-x64 /p:OutputPath=./publish
 
-      - name: Copy EXE to output
-        run: copy byky_korowa\bin\Release\*.exe output\
-
-      - name: Upload artifact
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: byky_korowy_v1-exe
-          path: output/*.exe
+          name: byky_korowa_v1_exe
+          path: ./publish
