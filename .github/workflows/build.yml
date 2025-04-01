@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
@@ -27,12 +27,8 @@ jobs:
       - name: Build project
         run: dotnet build --configuration Release
 
-      - name: Install Mono (for .NET Framework support)
-        run: sudo apt-get install -y mono-complete
-
       - name: Publish project
         run: dotnet publish byky_korowa/byky_korowa.csproj -c Release -r win-x64 --self-contained true -o output
-
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
