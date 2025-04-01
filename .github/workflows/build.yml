@@ -1,6 +1,9 @@
 name: Build C# Application
 
 on:
+ name: Build C# Application
+
+on:
   push:
     branches:
       - master
@@ -25,13 +28,14 @@ jobs:
         run: dotnet restore byky_korowa/byky_korowa.csproj
 
       - name: Build application
-        run: dotnet build byky_korowa/byky_korowa.csproj --configuration Release /p:OutputPath=./build
+        run: msbuild byky_korowa/byky_korowa.csproj /p:Configuration=Release /p:OutputPath=./build
 
       - name: Publish application
-        run: dotnet publish byky_korowa/byky_korowa.csproj --configuration Release --self-contained true --runtime win-x64 /p:OutputPath=./publish
+        run: msbuild byky_korowa/byky_korowa.csproj /p:Configuration=Release /p:PublishProfile=FolderProfile /p:OutputPath=./publish
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: byky_korowa_v1_exe
           path: ./publish
+
