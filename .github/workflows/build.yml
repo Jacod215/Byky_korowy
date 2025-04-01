@@ -1,9 +1,6 @@
 name: Build C# Application
 
 on:
- name: Build C# Application
-
-on:
   push:
     branches:
       - master
@@ -38,4 +35,3 @@ jobs:
         with:
           name: byky_korowa_v1_exe
           path: ./publish
-
