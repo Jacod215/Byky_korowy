@@ -16,19 +16,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x'
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: nuget restore byky_korowa.sln
 
       - name: Build project
-        run: dotnet build --configuration Release
+        run: msbuild byky_korowa/byky_korowa.csproj /p:Configuration=Release /p:Platform="Any CPU"
 
       - name: Publish project
-        run: dotnet publish byky_korowa/byky_korowa.csproj -c Release -r win-x64 --self-contained true -o output
+        run: msbuild byky_korowa/byky_korowa.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=output
+
+      - name: Copy EXE to output
+        run: copy byky_korowa\bin\Release\*.exe output\
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
